@@ -19,7 +19,7 @@ I'm Shivam Varshney,pursuing BTech in Computer Science from UIET, Kurukshetra Un
   <img align="center" src="https://github-readme-stats.vercel.app/api/top-langs/?username=varshney565&title_color=ffffff&text_color=c9cacc&icon_color=2bbc8a&bg_color=1d1f21" />
 </a>
 <a href="https://github.com/varshney565/varshney565">
-  <img align="center" src="https://github-readme-stats.vercel.app/api?username=varshney565&show_icons=true&line_height=27&count_private=true&title_color=ffffff&text_color=c9cacc&icon_color=2bbc8a&bg_color=1d1f21" alt="Hritik Khurana's GitHub Stats" />
+  <img align="center" src="https://github-readme-stats.vercel.app/api?username=varshney565&show_icons=true&line_height=27&count_private=true&title_color=ffffff&text_color=c9cacc&icon_color=2bbc8a&bg_color=1d1f21" alt="Shivam's GitHub Stats" />
 </a>
 <p align="left"> <img src="https://komarev.com/ghpvc/?username=varshney565&color=green&style=flat-square" alt="varshney565" /> </p>
 
