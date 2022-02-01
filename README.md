@@ -6,7 +6,7 @@ I'm Shivam Varshney,pursuing BTech in Computer Science from UIET, Kurukshetra Un
 - 🌱 I’m currently learning Web Development .
 - 🤵 Currently CP Lead at Google DSC.
 - 🤔 I’m looking building some cool projects.
-- 🥅 2021 Goals: Contribute more to Open Source projects.
+- 🥅 2022 Goals: Contribute more to Open Source projects.
 - ⚡ Fun fact: I love solving coding problems.
  [![Linkedin Badge](https://img.shields.io/badge/-Linkedin-blue?style=flat-square&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/shivam-varshney-9bb593206/)](https://www.linkedin.com/in/shivam-varshney-9bb593206/) 
 </br>
