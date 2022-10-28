@@ -2,10 +2,6 @@
 
 I'm Shivam Varshney,pursuing BTech in Computer Science from UIET, Kurukshetra University.
 
-- 🌱 I’m currently learning Web Development .
-- 🤔 I’m building some cool projects.
-- 🥅 2022 Goals: Expert at codeforces,5 star at codechef,Backend developer,700+ Leetcode Problems(Hard,Medium),2000+ at Leetcode.
-- ⚡ Fun fact: I love solving coding problems,not for others.
  [![Linkedin Badge](https://img.shields.io/badge/-Linkedin-blue?style=flat-square&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/shivam-varshney-9bb593206/)](https://www.linkedin.com/in/shivam-varshney-9bb593206/) 
 </br>
 <img align="right" alt="GIF" src="https://miro.medium.com/max/875/1*Urc28sbnORGOW5oyohQ06g.gif" width="400px" />
