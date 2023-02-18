@@ -27,6 +27,7 @@
 
 <h3 align="left">Languages and Tools:</h3>
 
+![C](https://img.shields.io/badge/-c-black?style=flat-square&logo=c)
 ![C++](https://img.shields.io/badge/-C++-00599C?style=flat-square&logo=c)
 ![JavaScript](https://img.shields.io/badge/-JavaScript-black?style=flat-square&logo=javascript)
 ![Nodejs](https://img.shields.io/badge/-Nodejs-black?style=flat-square&logo=Node.js)
@@ -38,6 +39,8 @@
 ![MySQL](https://img.shields.io/badge/-MySQL-black?style=flat-square&logo=mysql)
 ![Git](https://img.shields.io/badge/-Git-black?style=flat-square&logo=git)
 ![GitHub](https://img.shields.io/badge/-GitHub-181717?style=flat-square&logo=github)
+![elasticsearch](https://img.shields.io/badge/-elasticsearch-black?style=flat-square&logo=elasticsearch)
+![dotenv](https://img.shields.io/badge/-dotenv-black?style=flat-square&logo=dotenv)
 
 <p><img align="left" src="https://github-readme-stats.vercel.app/api/top-langs?username=varshney565&show_icons=true&locale=en&layout=compact" alt="varshney565" /></p>
 
