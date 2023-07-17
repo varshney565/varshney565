@@ -42,7 +42,8 @@
 ![elasticsearch](https://img.shields.io/badge/-elasticsearch-black?style=flat-square&logo=elasticsearch)
 ![dotenv](https://img.shields.io/badge/-dotenv-black?style=flat-square&logo=dotenv)
 ![Socket.io](https://img.shields.io/badge/-socket.io-black?style=flat-square&logo=socket.io)
-
+![rust](https://img.shields.io/badge/-rust-E10098?style=flat-square&logo=rust)
+![solidity](https://img.shields.io/badge/-solidity-005571?style=flat-square&logo=solidity)
 <p><img align="left" src="https://github-readme-stats.vercel.app/api/top-langs?username=varshney565&show_icons=true&locale=en&layout=compact" alt="varshney565" /></p>
 
 <p>&nbsp;<img align="center" src="https://github-readme-stats.vercel.app/api?username=varshney565&show_icons=true&locale=en" alt="varshney565" /></p>
