@@ -7,7 +7,7 @@
 
 <p align="left"> <a href="https://twitter.com/shivam56565" target="blank"><img src="https://img.shields.io/twitter/follow/shivam56565?logo=twitter&style=for-the-badge" alt="shivam56565" /></a> </p>
 
-- 🌱 I’m currently exploring **system design**
+- 🌱 I’m currently exploring **Blockchain**
 
 - 💬 Ask me about **Competitive programming and data structures and algorithems.**
 
