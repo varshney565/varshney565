@@ -9,7 +9,7 @@
 
 - 🌱 I’m currently exploring **Blockchain**
 
-- 💬 Ask me about **Competitive programming and data structures and algorithems.**
+- 💬 Ask me about **Competitive programming and data structures and algorithms.**
 
 - 📫 How to reach me **shivamvarshney565@gmail.com**
 
@@ -44,6 +44,9 @@
 ![Socket.io](https://img.shields.io/badge/-socket.io-black?style=flat-square&logo=socket.io)
 ![rust](https://img.shields.io/badge/-rust-E10098?style=flat-square&logo=rust)
 ![solidity](https://img.shields.io/badge/-solidity-005571?style=flat-square&logo=solidity)
+![actix-web](https://img.shields.io/badge/actix-0077B6?style=flat-square)
+![Go (Golang)](https://img.shields.io/badge/Go-%23007D9C?style=flat-square&logo=go&logoColor=white)
+
 <p><img align="left" src="https://github-readme-stats.vercel.app/api/top-langs?username=varshney565&show_icons=true&locale=en&layout=compact" alt="varshney565" /></p>
 
 <p>&nbsp;<img align="center" src="https://github-readme-stats.vercel.app/api?username=varshney565&show_icons=true&locale=en" alt="varshney565" /></p>
