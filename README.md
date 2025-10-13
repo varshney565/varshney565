@@ -1,4 +1,3 @@
-<!-- Self-hosted, reliable README (dark theme optimized) -->
 <p align="center">
   <img src="./assets/hero-banner.svg" alt="Shivam Varshney — Backend Developer" />
 </p>
@@ -18,48 +17,34 @@
 
 ---
 
-### 👨‍💻 About Me
-- 🌱 Currently exploring **Blockchain & Web3**
-- 🧠 Passionate about **Competitive Programming & DSA**
+## About
+- 🌱 Exploring **Blockchain & Web3**
+- 🧠 **Competitive Programming & DSA**
 - 💬 Ask me about **Node.js**, **Rust**, backend scalability
 - 📫 **shivamvarshney565@gmail.com**
 - ⚡ I love solving coding problems
 
-<!-- Slim animated divider (kept for subtle motion) -->
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/74038190/212747107-5b654ba5-31c6-4366-b42b-51b822e9bc52.gif" 
-       alt="Section divider" width="400" />
-</p>
-
 ---
 
-### ⚙️ Languages & Tools
+## Languages & Tools
 <p align="center">
   <img src="./assets/stack-strip.svg" alt="C · C++ · Go · Rust · Solidity · Node.js · Express · MongoDB · MySQL · Git · Docker · Linux" />
 </p>
 
 ---
 
-### 📊 GitHub (Snapshots — self-hosted)
+## GitHub Snapshot
 <p align="center">
-  <img src="./assets/github-stats.svg" alt="GitHub Stats snapshot" width="49%" />
-  <img src="./assets/github-streak.svg" alt="GitHub Streak snapshot" width="49%" />
+  <img src="./assets/github-stats.svg" alt="GitHub Stats" width="49%" />
+  <img src="./assets/github-streak.svg" alt="GitHub Streak" width="49%" />
 </p>
-
 <p align="center">
-  <img src="./assets/top-langs.svg" alt="Top Languages snapshot" width="50%" />
-</p>
-
----
-
-### 🏆 Achievements
-<p align="center">
-  <img src="./assets/trophies.svg" alt="GitHub Trophies snapshot" />
+  <img src="./assets/top-langs.svg" alt="Top Languages" width="50%" />
 </p>
 
 ---
 
-### ✨ Quote
-> “Strive for progress, not perfection.”
-
-<p align="center">Thanks for visiting! ⭐ a repo if you liked it.</p>
+## Achievements
+<p align="center">
+  <img src="./assets/trophies.svg" alt="GitHub Trophies" />
+</p>
