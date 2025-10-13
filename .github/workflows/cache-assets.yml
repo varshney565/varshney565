@@ -5,23 +5,29 @@ on:
   schedule:
     - cron: "0 */12 * * *"  # every 12 hours
 
+permissions:
+  contents: write
+
 jobs:
   cache-readme-assets:
     runs-on: ubuntu-latest
     env:
       GH_USER: varshney565
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      TZ: Asia/Kolkata
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repo (full history for 3D graph)
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Ensure assets dirs
+      - name: Ensure asset dirs
         run: |
           mkdir -p assets assets/icons dist
 
-      # -------- GitHub stats (keep old on provider error) --------
-      - name: Fetch GitHub stats
+      # ---------- GitHub Stats ----------
+      - name: Fetch GitHub stats (keep old if provider errors)
         shell: bash
         run: |
           set -e
@@ -32,8 +38,8 @@ jobs:
           if [ -s "$tmp" ] && ! grep -qi "something went wrong" "$tmp"; then mv "$tmp" "$out"; else rm -f "$tmp"; fi
           [ -s "$out" ] || printf '<svg xmlns="http://www.w3.org/2000/svg" width="480" height="200"><rect width="100%%" height="100%%" fill="#0d1117"/><text x="50%%" y="50%%" fill="#58a6ff" font-size="16" font-family="Arial" text-anchor="middle" dominant-baseline="middle">Stats unavailable — cached placeholder</text></svg>' > "$out"
 
-      # -------- Streak (use stable domain; keep old on error) --------
-      - name: Fetch streak
+      # ---------- Streak ----------
+      - name: Fetch streak (stable domain; keep old if error)
         shell: bash
         run: |
           set -e
@@ -44,8 +50,8 @@ jobs:
           if [ -s "$tmp" ] && ! grep -qi "failed to" "$tmp"; then mv "$tmp" "$out"; else rm -f "$tmp"; fi
           [ -s "$out" ] || printf '<svg xmlns="http://www.w3.org/2000/svg" width="480" height="200"><rect width="100%%" height="100%%" fill="#0d1117"/><text x="50%%" y="50%%" fill="#58a6ff" font-size="16" font-family="Arial" text-anchor="middle" dominant-baseline="middle">Streak unavailable — cached placeholder</text></svg>' > "$out"
 
-      # -------- Top languages (keep old on error) --------
-      - name: Fetch top languages
+      # ---------- Top Languages ----------
+      - name: Fetch top languages (keep old if error)
         shell: bash
         run: |
           set -e
@@ -56,8 +62,8 @@ jobs:
           if [ -s "$tmp" ] && ! grep -qi "something went wrong" "$tmp"; then mv "$tmp" "$out"; else rm -f "$tmp"; fi
           [ -s "$out" ] || printf '<svg xmlns="http://www.w3.org/2000/svg" width="520" height="200"><rect width="100%%" height="100%%" fill="#0d1117"/><text x="50%%" y="50%%" fill="#58a6ff" font-size="16" font-family="Arial" text-anchor="middle" dominant-baseline="middle">Top languages unavailable — cached placeholder</text></svg>' > "$out"
 
-      # -------- Typing line (salesp07 vibe) --------
-      - name: Fetch typing line
+      # ---------- Typing Line ----------
+      - name: Fetch typing line (salesp07 style)
         shell: bash
         run: |
           set -e
@@ -67,8 +73,8 @@ jobs:
             -o "$tmp" || true
           [ -s "$tmp" ] && mv "$tmp" "$out" || printf '<svg xmlns="http://www.w3.org/2000/svg" width="700" height="40"><rect width="100%%" height="100%%" fill="#0d1117"/><text x="50%%" y="50%%" fill="#58a6ff" font-size="16" font-family="Arial" text-anchor="middle" dominant-baseline="middle">Blockchain Developer · Competitive Programmer</text></svg>' > "$out"
 
-      # -------- Advanced trophies (matrix theme) --------
-      - name: Fetch advanced trophies
+      # ---------- Advanced Trophies ----------
+      - name: Fetch advanced trophies (matrix theme)
         shell: bash
         run: |
           set -e
@@ -78,29 +84,25 @@ jobs:
             -o "$tmp" || true
           [ -s "$tmp" ] && mv "$tmp" "$out" || printf '<svg xmlns="http://www.w3.org/2000/svg" width="920" height="160"><rect width="100%%" height="100%%" fill="#0d1117"/><text x="50%%" y="50%%" fill="#58a6ff" font-size="16" font-family="Arial" text-anchor="middle" dominant-baseline="middle">Trophies will load after next run</text></svg>' > "$out"
 
-      # -------- Snake (correct inputs; normalize filename) --------
-      - name: Generate snake (SVG)
+      # ---------- Snake ----------
+      - name: Generate snake (SVG) with clean filename
         uses: Platane/snk/svg-only@v3
         continue-on-error: true
         with:
           github_user_name: ${{ env.GH_USER }}
           outputs: |
-            dist/snake.svg?palette=github-dark
+            dist/snake.svg
 
-      - name: Move snake into assets
+      - name: Move snake into assets (any output location)
         shell: bash
         run: |
           set -e
-          if [ -f dist/snake.svg ]; then
-            mv dist/snake.svg assets/snake.svg
-          elif ls dist/snake.svg\?palette=github-dark >/dev/null 2>&1; then
-            mv "dist/snake.svg?palette=github-dark" assets/snake.svg
-          elif [ -f snake.svg ]; then
-            mv snake.svg assets/snake.svg
-          fi
+          for p in dist/snake.svg snake.svg; do
+            if [ -f "$p" ]; then mv "$p" assets/snake.svg; fi
+          done
           [ -s assets/snake.svg ] || printf '<svg xmlns="http://www.w3.org/2000/svg" width="920" height="160"><rect width="100%%" height="100%%" fill="#0d1117"/><text x="50%%" y="50%%" fill="#58a6ff" font-size="16" font-family="Arial" text-anchor="middle" dominant-baseline="middle">Snake will load after next run</text></svg>' > assets/snake.svg
 
-      # -------- 3D contribution graph (needs USERNAME env) --------
+      # ---------- 3D Contribution Graph ----------
       - name: Generate 3D contribution graph
         uses: yoshi389111/github-profile-3d-contrib@0.7.1
         continue-on-error: true
@@ -113,14 +115,11 @@ jobs:
         run: |
           set -e
           for p in profile-3d-contrib/profile-3d-contrib.svg output/profile-3d-contrib.svg profile-3d-contrib.svg; do
-            if [ -f "$p" ]; then
-              mv "$p" assets/profile-3d-contrib.svg
-              break
-            fi
+            if [ -f "$p" ]; then mv "$p" assets/profile-3d-contrib.svg; break; fi
           done
           [ -s assets/profile-3d-contrib.svg ] || printf '<svg xmlns="http://www.w3.org/2000/svg" width="920" height="260"><rect width="100%%" height="100%%" fill="#0d1117"/><text x="50%%" y="50%%" fill="#58a6ff" font-size="16" font-family="Arial" text-anchor="middle" dominant-baseline="middle">3D graph will load after next run</text></svg>' > assets/profile-3d-contrib.svg
 
-      # -------- Commit if anything changed --------
+      # ---------- Commit if changed ----------
       - name: Commit refreshed assets
         shell: bash
         run: |
