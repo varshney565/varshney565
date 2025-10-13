@@ -1,8 +1,7 @@
-name: profile-3d-contrib
-
+name: contrib-3d-south
 on:
   schedule:
-    - cron: "0 18 * * *"   # daily at 18:00 UTC
+    - cron: "0 18 * * *"   # daily 18:00 UTC
   workflow_dispatch:
 
 permissions:
@@ -11,27 +10,46 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      USERNAME: varshney565
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     steps:
-      - name: Checkout (full history required)
+      - name: Checkout (full history)
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Generate 3D contribution images
-        uses: yoshi389111/github-profile-3d-contrib@0.7.1
+      - name: Generate 3D contribution images (official action)
+        uses: yoshi389111/github-profile-3d-contrib@latest
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          USERNAME: varshney565
+          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
+          USERNAME: ${{ env.USERNAME }}
 
-      - name: Commit 3D images
+      # Optional: copy the exact file you want into assets/ for a stable path
+      - name: Copy south-season-animate variant to assets
         shell: bash
         run: |
-          if [ -n "$(git status --porcelain profile-3d-contrib 2>/dev/null)" ]; then
+          set -euo pipefail
+          mkdir -p assets
+          src="profile-3d-contrib/profile-south-season-animate.svg"
+          if [ -f "$src" ]; then
+            cp "$src" "assets/profile-3d-south.svg"
+          else
+            echo "Expected $src not found; list generated files:"
+            ls -lah profile-3d-contrib || true
+            exit 1
+          fi
+
+      - name: Commit images
+        shell: bash
+        run: |
+          if [ -n "$(git status --porcelain profile-3d-contrib assets 2>/dev/null)" ]; then
             git config user.name  "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add profile-3d-contrib
-            git commit -m "chore: update 3D contribution SVGs"
+            git add profile-3d-contrib assets/profile-3d-south.svg
+            git commit -m "chore: update 3D contributions (south-season-animate)"
             git push
           else
-            echo "No 3D image changes"
+            echo "No changes"
           fi
