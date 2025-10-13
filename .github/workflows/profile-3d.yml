@@ -1,7 +1,8 @@
-name: contrib-3d-alt
+name: profile-3d-contrib
+
 on:
   schedule:
-    - cron: "0 18 * * *"  # daily 18:00 UTC
+    - cron: "0 18 * * *"   # daily at 18:00 UTC
   workflow_dispatch:
 
 permissions:
@@ -10,46 +11,27 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      USERNAME: varshney565
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
     steps:
-      - name: Checkout (full history)
+      - name: Checkout (full history required)
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Generate 3D contribution images (fixed fork)
-        uses: Rei-x/github-profile-3d-contrib-fixed@v1
+      - name: Generate 3D contribution images
+        uses: yoshi389111/github-profile-3d-contrib@0.7.1
         env:
-          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
-          USERNAME: ${{ env.USERNAME }}
-        # Some forks accept extra envs like THEME; leave defaults first run
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          USERNAME: varshney565
 
-      - name: Rename one variant into assets for easy embedding
+      - name: Commit 3D images
         shell: bash
         run: |
-          set -euo pipefail
-          mkdir -p assets
-          # pick the variant you like; adjust filename if different in this fork
-          cand="$(ls profile-3d-contrib/*night*svg 2>/dev/null | head -n1 || true)"
-          if [ -n "$cand" ]; then
-            cp "$cand" assets/profile-3d-alt.svg
-          fi
-          echo "Generated:"
-          ls -lah profile-3d-contrib || true
-          ls -lah assets || true
-
-      - name: Commit images
-        shell: bash
-        run: |
-          if [ -n "$(git status --porcelain profile-3d-contrib assets 2>/dev/null)" ]; then
+          if [ -n "$(git status --porcelain profile-3d-contrib 2>/dev/null)" ]; then
             git config user.name  "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add profile-3d-contrib assets/profile-3d-alt.svg
-            git commit -m "chore: update 3D contribution images (alt)"
+            git add profile-3d-contrib
+            git commit -m "chore: update 3D contribution SVGs"
             git push
           else
-            echo "No changes"
+            echo "No 3D image changes"
           fi
