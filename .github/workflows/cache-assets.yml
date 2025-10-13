@@ -21,7 +21,7 @@ jobs:
           mkdir -p assets
           mkdir -p assets/icons
 
-      # ------- Cached stat cards -------
+      # -------- Cached stat cards --------
       - name: Fetch GitHub stats
         shell: bash
         run: |
@@ -49,8 +49,7 @@ jobs:
           curl -fL --retry 5 --retry-delay 5 "$url" -o "${out}.tmp" || true
           [ -s "${out}.tmp" ] && mv "${out}.tmp" "$out"
 
-      # ------- Typing line (salesp07 vibe) -------
-      - name: Fetch typing line
+      - name: Fetch typing line (salesp07-style)
         shell: bash
         run: |
           set -e
@@ -59,8 +58,7 @@ jobs:
           curl -fL --retry 5 --retry-delay 5 "$url" -o "${out}.tmp" || true
           [ -s "${out}.tmp" ] && mv "${out}.tmp" "$out"
 
-      # ------- Advanced trophies (matrix) -------
-      - name: Fetch advanced trophies
+      - name: Fetch advanced trophies (matrix theme)
         shell: bash
         run: |
           set -e
@@ -69,24 +67,34 @@ jobs:
           curl -fL --retry 5 --retry-delay 5 "$url" -o "${out}.tmp" || true
           [ -s "${out}.tmp" ] && mv "${out}.tmp" "$out"
 
-      # ------- Snake contributions (VikashPR vibe) -------
-      - name: Generate snake
+      # -------- Contribution Snake (correct inputs) --------
+      - name: Generate snake (SVG)
         uses: Platane/snk/svg-only@v3
         continue-on-error: true
         with:
           github_user_name: ${{ env.GH_USER }}
           outputs: |
-            assets/snake.svg
+            assets/snake.svg?palette=github-dark
 
-      # ------- 3D contributions -------
+      # -------- 3D contribution graph (expects ENV, not inputs) --------
       - name: Generate 3D contrib graph
         uses: yoshi389111/github-profile-3d-contrib@0.7.1
         continue-on-error: true
-        with:
-          username: ${{ env.GH_USER }}
-          output: assets/profile-3d-contrib.svg
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          USERNAME: ${{ env.GH_USER }}
 
-      # ------- Commit if anything changed -------
+      - name: Move 3D contrib into assets
+        shell: bash
+        run: |
+          set -e
+          if [ -f "profile-3d-contrib/profile-3d-contrib.svg" ]; then
+            mv profile-3d-contrib/profile-3d-contrib.svg assets/profile-3d-contrib.svg
+          elif [ -f "output/profile-3d-contrib.svg" ]; then
+            mv output/profile-3d-contrib.svg assets/profile-3d-contrib.svg
+          fi
+
+      # -------- Commit if anything changed --------
       - name: Commit refreshed assets
         shell: bash
         run: |
