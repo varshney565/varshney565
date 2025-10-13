@@ -17,75 +17,76 @@ jobs:
       TZ: Asia/Kolkata
 
     steps:
-      - name: Checkout repo (full history for 3D graph)
+      # Full history helps 3D contrib action; also fixes some date calc edge cases
+      - name: Checkout repo
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Ensure asset dirs
+      - name: Ensure assets dirs
         run: |
           mkdir -p assets assets/icons dist
 
       # ---------- GitHub Stats ----------
-      - name: Fetch GitHub stats (keep old if provider errors)
+      - name: Fetch GitHub stats (keep last good on provider error)
         shell: bash
         run: |
-          set -e
+          set -euo pipefail
           out="assets/github-stats.svg"; tmp="${out}.tmp"
-          curl -fL --retry 5 --retry-delay 5 \
-            "https://github-readme-stats.vercel.app/api?username=${GH_USER}&show_icons=true&include_all_commits=true&count_private=true&cache_seconds=21600&theme=tokyonight" \
+          curl -fL --retry 7 --retry-delay 6 \
+            "https://github-readme-stats.vercel.app/api?username=${GH_USER}&show_icons=true&include_all_commits=true&count_private=true&cache_seconds=43200&theme=tokyonight&v=1" \
             -o "$tmp" || true
           if [ -s "$tmp" ] && ! grep -qi "something went wrong" "$tmp"; then mv "$tmp" "$out"; else rm -f "$tmp"; fi
           [ -s "$out" ] || printf '<svg xmlns="http://www.w3.org/2000/svg" width="480" height="200"><rect width="100%%" height="100%%" fill="#0d1117"/><text x="50%%" y="50%%" fill="#58a6ff" font-size="16" font-family="Arial" text-anchor="middle" dominant-baseline="middle">Stats unavailable — cached placeholder</text></svg>' > "$out"
 
       # ---------- Streak ----------
-      - name: Fetch streak (stable domain; keep old if error)
+      - name: Fetch streak (stable domain; keep last good on error)
         shell: bash
         run: |
-          set -e
+          set -euo pipefail
           out="assets/github-streak.svg"; tmp="${out}.tmp"
-          curl -fL --retry 5 --retry-delay 5 \
+          curl -fL --retry 7 --retry-delay 6 \
             "https://streak-stats.demolab.com?user=${GH_USER}&theme=tokyonight" \
             -o "$tmp" || true
           if [ -s "$tmp" ] && ! grep -qi "failed to" "$tmp"; then mv "$tmp" "$out"; else rm -f "$tmp"; fi
           [ -s "$out" ] || printf '<svg xmlns="http://www.w3.org/2000/svg" width="480" height="200"><rect width="100%%" height="100%%" fill="#0d1117"/><text x="50%%" y="50%%" fill="#58a6ff" font-size="16" font-family="Arial" text-anchor="middle" dominant-baseline="middle">Streak unavailable — cached placeholder</text></svg>' > "$out"
 
       # ---------- Top Languages ----------
-      - name: Fetch top languages (keep old if error)
+      - name: Fetch top languages (keep last good on error)
         shell: bash
         run: |
-          set -e
+          set -euo pipefail
           out="assets/top-langs.svg"; tmp="${out}.tmp"
-          curl -fL --retry 5 --retry-delay 5 \
-            "https://github-readme-stats.vercel.app/api/top-langs/?username=${GH_USER}&layout=compact&langs_count=10&cache_seconds=21600&theme=tokyonight" \
+          curl -fL --retry 7 --retry-delay 6 \
+            "https://github-readme-stats.vercel.app/api/top-langs/?username=${GH_USER}&layout=compact&langs_count=10&cache_seconds=43200&theme=tokyonight&v=1" \
             -o "$tmp" || true
           if [ -s "$tmp" ] && ! grep -qi "something went wrong" "$tmp"; then mv "$tmp" "$out"; else rm -f "$tmp"; fi
           [ -s "$out" ] || printf '<svg xmlns="http://www.w3.org/2000/svg" width="520" height="200"><rect width="100%%" height="100%%" fill="#0d1117"/><text x="50%%" y="50%%" fill="#58a6ff" font-size="16" font-family="Arial" text-anchor="middle" dominant-baseline="middle">Top languages unavailable — cached placeholder</text></svg>' > "$out"
 
-      # ---------- Typing Line ----------
-      - name: Fetch typing line (salesp07 style)
+      # ---------- Typing line ----------
+      - name: Fetch typing line
         shell: bash
         run: |
-          set -e
+          set -euo pipefail
           out="assets/typing.svg"; tmp="${out}.tmp"
           curl -fL --retry 5 --retry-delay 5 \
-            "https://readme-typing-svg.demolab.com?font=Inter&weight=700&size=24&pause=900&duration=2600&color=00FFFF&center=true&vCenter=true&width=700&lines=Blockchain+Developer;Rust+%7C+Go+%7C+Python;Competitive+Programmer" \
+            "https://readme-typing-svg.demolab.com?font=Inter&weight=700&size=24&pause=900&duration=2600&color=00FFFF&center=true&vCenter=true&width=700&lines=Blockchain+Developer;Backend:+Rust+%7C+Go+%7C+Node.js;Competitive+Programmer" \
             -o "$tmp" || true
-          [ -s "$tmp" ] && mv "$tmp" "$out" || printf '<svg xmlns="http://www.w3.org/2000/svg" width="700" height="40"><rect width="100%%" height="100%%" fill="#0d1117"/><text x="50%%" y="50%%" fill="#58a6ff" font-size="16" font-family="Arial" text-anchor="middle" dominant-baseline="middle">Blockchain Developer · Competitive Programmer</text></svg>' > "$out"
+          [ -s "$tmp" ] && mv "$tmp" "$out" || printf '<svg xmlns="http://www.w3.org/2000/svg" width="700" height="40"><rect width="100%%" height="100%%" fill="#0d1117"/><text x="50%%" y="50%%" fill="#58a6ff" font-size="16" font-family="Arial" text-anchor="middle" dominant-baseline="middle">Blockchain Developer · Backend · Competitive Programmer</text></svg>' > "$out"
 
       # ---------- Advanced Trophies ----------
-      - name: Fetch advanced trophies (matrix theme)
+      - name: Fetch advanced trophies
         shell: bash
         run: |
-          set -e
+          set -euo pipefail
           out="assets/trophies-advanced.svg"; tmp="${out}.tmp"
           curl -fL --retry 5 --retry-delay 5 \
             "https://github-profile-trophy.vercel.app/?username=${GH_USER}&theme=matrix&no-bg=true&no-frame=true&column=6" \
             -o "$tmp" || true
           [ -s "$tmp" ] && mv "$tmp" "$out" || printf '<svg xmlns="http://www.w3.org/2000/svg" width="920" height="160"><rect width="100%%" height="100%%" fill="#0d1117"/><text x="50%%" y="50%%" fill="#58a6ff" font-size="16" font-family="Arial" text-anchor="middle" dominant-baseline="middle">Trophies will load after next run</text></svg>' > "$out"
 
-      # ---------- Snake ----------
-      - name: Generate snake (SVG) with clean filename
+      # ---------- Snake (clean filename, robust move) ----------
+      - name: Generate snake (SVG)
         uses: Platane/snk/svg-only@v3
         continue-on-error: true
         with:
@@ -93,13 +94,17 @@ jobs:
           outputs: |
             dist/snake.svg
 
-      - name: Move snake into assets (any output location)
+      - name: Move snake into assets
         shell: bash
         run: |
-          set -e
-          for p in dist/snake.svg snake.svg; do
-            if [ -f "$p" ]; then mv "$p" assets/snake.svg; fi
-          done
+          set -euo pipefail
+          if [ -f dist/snake.svg ]; then
+            mv dist/snake.svg assets/snake.svg
+          elif [ -f snake.svg ]; then
+            mv snake.svg assets/snake.svg
+          elif ls dist/snake.svg\?* >/dev/null 2>&1; then
+            mv "$(ls dist/snake.svg\?* | head -n1)" assets/snake.svg
+          fi
           [ -s assets/snake.svg ] || printf '<svg xmlns="http://www.w3.org/2000/svg" width="920" height="160"><rect width="100%%" height="100%%" fill="#0d1117"/><text x="50%%" y="50%%" fill="#58a6ff" font-size="16" font-family="Arial" text-anchor="middle" dominant-baseline="middle">Snake will load after next run</text></svg>' > assets/snake.svg
 
       # ---------- 3D Contribution Graph ----------
@@ -110,13 +115,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           USERNAME: ${{ env.GH_USER }}
 
-      - name: Move 3D graph into assets (wherever it was created)
+      - name: Move 3D graph into assets (find wherever it was created)
         shell: bash
         run: |
-          set -e
-          for p in profile-3d-contrib/profile-3d-contrib.svg output/profile-3d-contrib.svg profile-3d-contrib.svg; do
-            if [ -f "$p" ]; then mv "$p" assets/profile-3d-contrib.svg; break; fi
-          done
+          set -euo pipefail
+          found="$(find . -maxdepth 4 -type f -name '*3d*contrib*.svg' -o -name 'profile-3d*.svg' | head -n1 || true)"
+          if [ -n "$found" ]; then
+            mv "$found" assets/profile-3d-contrib.svg
+          fi
           [ -s assets/profile-3d-contrib.svg ] || printf '<svg xmlns="http://www.w3.org/2000/svg" width="920" height="260"><rect width="100%%" height="100%%" fill="#0d1117"/><text x="50%%" y="50%%" fill="#58a6ff" font-size="16" font-family="Arial" text-anchor="middle" dominant-baseline="middle">3D graph will load after next run</text></svg>' > assets/profile-3d-contrib.svg
 
       # ---------- Commit if changed ----------
