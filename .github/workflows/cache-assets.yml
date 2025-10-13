@@ -32,7 +32,7 @@ jobs:
           U2="https://github-readme-stats-git-masterrstaa-rickstaa.vercel.app/api?username=${GH_USER}&show_icons=true&include_all_commits=true&count_private=true&cache_seconds=43200&theme=tokyonight&v=${GITHUB_RUN_ID}"
           for U in "$U1" "$U2"; do
             curl -fsSL --retry 7 --retry-delay 6 "$U" -o "$TMP" || true
-            if [ -s "$TMP" ] && head -c 5 "$TMP" | grep -qi '<svg'; then mv "$TMP" "$OUT"; break; else rm -f "$TMP"; fi
+            if [ -s "$TMP" ] && head -c 512 "$TMP" | tr -d '\000' | grep -Eiq '<svg|<\?xml'; then mv "$TMP" "$OUT"; break; else rm -f "$TMP"; fi
           done
           [ -s "$OUT" ] || printf '<svg xmlns="http://www.w3.org/2000/svg" width="700" height="200"><rect width="100%%" height="100%%" fill="#0d1117"/><text x="50%%" y="50%%" fill="#58a6ff" font-size="16" font-family="Arial" text-anchor="middle" dominant-baseline="middle">Temporarily unavailable — will refresh on next run</text></svg>' > "$OUT"
 
@@ -43,7 +43,7 @@ jobs:
           OUT="assets/github-streak.svg"; TMP="${OUT}.tmp"
           U="https://streak-stats.demolab.com?user=${GH_USER}&theme=tokyonight&v=${GITHUB_RUN_ID}"
           curl -fsSL --retry 7 --retry-delay 6 "$U" -o "$TMP" || true
-          if [ -s "$TMP" ] && head -c 5 "$TMP" | grep -qi '<svg'; then mv "$TMP" "$OUT"; else rm -f "$TMP"; fi
+          if [ -s "$TMP" ] && head -c 512 "$TMP" | tr -d '\000' | grep -Eiq '<svg|<\?xml'; then mv "$TMP" "$OUT"; else rm -f "$TMP"; fi
           [ -s "$OUT" ] || printf '<svg xmlns="http://www.w3.org/2000/svg" width="700" height="200"><rect width="100%%" height="100%%" fill="#0d1117"/><text x="50%%" y="50%%" fill="#58a6ff" font-size="16" font-family="Arial" text-anchor="middle" dominant-baseline="middle">Temporarily unavailable — will refresh on next run</text></svg>' > "$OUT"
 
       - name: Top languages (with mirror fallback)
@@ -55,7 +55,7 @@ jobs:
           U2="https://github-readme-stats-git-masterrstaa-rickstaa.vercel.app/api/top-langs/?username=${GH_USER}&layout=compact&langs_count=10&cache_seconds=43200&theme=tokyonight&v=${GITHUB_RUN_ID}"
           for U in "$U1" "$U2"; do
             curl -fsSL --retry 7 --retry-delay 6 "$U" -o "$TMP" || true
-            if [ -s "$TMP" ] && head -c 5 "$TMP" | grep -qi '<svg'; then mv "$TMP" "$OUT"; break; else rm -f "$TMP"; fi
+            if [ -s "$TMP" ] && head -c 512 "$TMP" | tr -d '\000' | grep -Eiq '<svg|<\?xml'; then mv "$TMP" "$OUT"; break; else rm -f "$TMP"; fi
           done
           [ -s "$OUT" ] || printf '<svg xmlns="http://www.w3.org/2000/svg" width="700" height="200"><rect width="100%%" height="100%%" fill="#0d1117"/><text x="50%%" y="50%%" fill="#58a6ff" font-size="16" font-family="Arial" text-anchor="middle" dominant-baseline="middle">Temporarily unavailable — will refresh on next run</text></svg>' > "$OUT"
 
@@ -66,7 +66,7 @@ jobs:
           OUT="assets/typing.svg"; TMP="${OUT}.tmp"
           U="https://readme-typing-svg.demolab.com?font=Inter&weight=700&size=24&pause=900&duration=2600&color=00FFFF&center=true&vCenter=true&width=700&lines=Blockchain+Developer;Backend:+Rust+%7C+Go+%7C+Node.js;Competitive+Programmer&v=${GITHUB_RUN_ID}"
           curl -fsSL --retry 5 --retry-delay 5 "$U" -o "$TMP" || true
-          if [ -s "$TMP" ] && head -c 5 "$TMP" | grep -qi '<svg'; then mv "$TMP" "$OUT"; else rm -f "$TMP"; fi
+          if [ -s "$TMP" ] && head -c 512 "$TMP" | tr -d '\000' | grep -Eiq '<svg|<\?xml'; then mv "$TMP" "$OUT"; else rm -f "$TMP"; fi
           [ -s "$OUT" ] || printf '<svg xmlns="http://www.w3.org/2000/svg" width="700" height="40"><rect width="100%%" height="100%%" fill="#0d1117"/><text x="50%%" y="50%%" fill="#58a6ff" font-size="16" font-family="Arial" text-anchor="middle" dominant-baseline="middle">Blockchain Developer · Backend · Competitive Programmer</text></svg>' > "$OUT"
 
       - name: Trophies (retry with simpler theme)
@@ -78,7 +78,7 @@ jobs:
           U2="https://github-profile-trophy.vercel.app/?username=${GH_USER}&theme=onedark&row=1&margin-w=10&margin-h=10&v=${GITHUB_RUN_ID}"
           for U in "$U1" "$U2"; do
             curl -fsSL --retry 5 --retry-delay 5 "$U" -o "$TMP" || true
-            if [ -s "$TMP" ] && head -c 5 "$TMP" | grep -qi '<svg'; then mv "$TMP" "$OUT"; break; else rm -f "$TMP"; fi
+            if [ -s "$TMP" ] && head -c 512 "$TMP" | tr -d '\000' | grep -Eiq '<svg|<\?xml'; then mv "$TMP" "$OUT"; break; else rm -f "$TMP"; fi
           done
           [ -s "$OUT" ] || printf '<svg xmlns="http://www.w3.org/2000/svg" width="920" height="160"><rect width="100%%" height="100%%" fill="#0d1117"/><text x="50%%" y="50%%" fill="#58a6ff" font-size="16" font-family="Arial" text-anchor="middle" dominant-baseline="middle">Trophies will load after next run</text></svg>' > "$OUT"
 
