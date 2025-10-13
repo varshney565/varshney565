@@ -3,12 +3,11 @@ name: Cache README Assets
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 */12 * * *"   # every 12 hours; change if you want
+    - cron: "0 */12 * * *"   # every 12 hours
 
 jobs:
   cache-readme-assets:
     runs-on: ubuntu-latest
-
     env:
       GH_USER: varshney565
 
@@ -19,7 +18,7 @@ jobs:
       - name: Make assets dir
         run: mkdir -p assets
 
-      - name: Fetch images with retries (stats, streak, langs, trophies)
+      - name: Fetch images with retries
         shell: bash
         run: |
           set -euo pipefail
@@ -27,44 +26,36 @@ jobs:
           fetch() {
             local url="$1"
             local out="$2"
-            echo "→ Fetching: $url"
-            # retry, backoff, and don't clobber if the download fails
-            if curl -fL --retry 5 --retry-delay 5 \
-                    -H "User-Agent: cache-assets-workflow" \
-                    "$url" -o "$out.tmp"; then
+            echo "Fetching $out ..."
+            if curl -fL --retry 5 --retry-delay 5 "$url" -o "$out.tmp"; then
               if [ -s "$out.tmp" ]; then
                 mv "$out.tmp" "$out"
-                echo "✓ Wrote $out"
+                echo "✓ Saved $out"
               else
                 rm -f "$out.tmp"
-                echo "✗ Empty response for $out — keeping previous file if any"
+                echo "⚠ Empty response for $out — keeping previous file if any"
               fi
             else
               rm -f "$out.tmp" || true
-              echo "✗ Failed to fetch $url — keeping previous $out if any"
+              echo "✗ Failed to fetch $out — keeping previous file if any"
             fi
           }
 
-          # GitHub Readme Stats (vercel) — add conservative caching + private counts
-          fetch "https://github-readme-stats.vercel.app/api?username=${GH_USER}&show_icons=true&include_all_commits=true&count_private=true&cache_seconds=21600&theme=tokyonight" \
-                assets/github-stats.svg
+          # Stats
+          fetch "https://github-readme-stats.vercel.app/api?username=${GH_USER}&show_icons=true&include_all_commits=true&count_private=true&cache_seconds=21600&theme=tokyonight" assets/github-stats.svg
 
-          # Streak Stats — use the stable domain (demolab.com), NOT herokuapp
-          fetch "https://streak-stats.demolab.com?user=${GH_USER}&theme=tokyonight" \
-                assets/github-streak.svg
+          # Streak (use new stable domain)
+          fetch "https://streak-stats.demolab.com?user=${GH_USER}&theme=tokyonight" assets/github-streak.svg
 
-          # Top Languages — limit + cache
-          fetch "https://github-readme-stats.vercel.app/api/top-langs/?username=${GH_USER}&layout=compact&langs_count=10&cache_seconds=21600&theme=tokyonight" \
-                assets/top-langs.svg
+          # Top languages
+          fetch "https://github-readme-stats.vercel.app/api/top-langs/?username=${GH_USER}&layout=compact&langs_count=10&cache_seconds=21600&theme=tokyonight" assets/top-langs.svg
 
           # Trophies
-          fetch "https://github-profile-trophy.vercel.app/?username=${GH_USER}&theme=onedark&margin-w=10&margin-h=10&row=1" \
-                assets/trophies.svg
+          fetch "https://github-profile-trophy.vercel.app/?username=${GH_USER}&theme=onedark&margin-w=10&margin-h=10&row=1" assets/trophies.svg
 
-          # Ensure placeholders exist if files don't (first run / hard outage)
+          # Ensure placeholders if missing
           for f in trophies.svg github-stats.svg github-streak.svg top-langs.svg; do
             if [ ! -s "assets/$f" ]; then
-              echo "⚠︎ Creating placeholder for $f"
               cat > "assets/$f" <<'SVG'
 <svg xmlns="http://www.w3.org/2000/svg" width="900" height="220">
   <rect width="100%" height="100%" fill="#0d1117"/>
@@ -77,7 +68,7 @@ SVG
             fi
           done
 
-      - name: Commit refreshed assets (if changed)
+      - name: Commit refreshed assets
         run: |
           if [ -n "$(git status --porcelain assets)" ]; then
             git config user.name "github-actions[bot]"
@@ -86,5 +77,5 @@ SVG
             git commit -m "chore: refresh cached README assets"
             git push
           else
-            echo "No asset changes"
+            echo "No changes detected"
           fi
