@@ -3,7 +3,7 @@ name: Cache README Assets
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 */12 * * *"   # every 12 hours
+    - cron: "0 */12 * * *"  # every 12 hours
 
 jobs:
   cache-readme-assets:
@@ -15,60 +15,63 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Make assets dir
+      - name: Ensure assets dir
         run: mkdir -p assets
 
-      - name: Fetch images with retries
+      - name: Fetch GitHub stats
         shell: bash
         run: |
-          set -euo pipefail
+          set -e
+          url="https://github-readme-stats.vercel.app/api?username=${GH_USER}&show_icons=true&include_all_commits=true&count_private=true&cache_seconds=21600&theme=tokyonight"
+          out="assets/github-stats.svg"
+          curl -fL --retry 5 --retry-delay 5 "$url" -o "${out}.tmp" || true
+          if [ -s "${out}.tmp" ]; then mv "${out}.tmp" "$out"; fi
 
-          fetch() {
-            local url="$1"
-            local out="$2"
-            echo "Fetching $out ..."
-            if curl -fL --retry 5 --retry-delay 5 "$url" -o "$out.tmp"; then
-              if [ -s "$out.tmp" ]; then
-                mv "$out.tmp" "$out"
-                echo "✓ Saved $out"
-              else
-                rm -f "$out.tmp"
-                echo "⚠ Empty response for $out — keeping previous file if any"
-              fi
-            else
-              rm -f "$out.tmp" || true
-              echo "✗ Failed to fetch $out — keeping previous file if any"
-            fi
+      - name: Fetch streak
+        shell: bash
+        run: |
+          set -e
+          url="https://streak-stats.demolab.com?user=${GH_USER}&theme=tokyonight"
+          out="assets/github-streak.svg"
+          curl -fL --retry 5 --retry-delay 5 "$url" -o "${out}.tmp" || true
+          if [ -s "${out}.tmp" ]; then mv "${out}.tmp" "$out"; fi
+
+      - name: Fetch top languages
+        shell: bash
+        run: |
+          set -e
+          url="https://github-readme-stats.vercel.app/api/top-langs/?username=${GH_USER}&layout=compact&langs_count=10&cache_seconds=21600&theme=tokyonight"
+          out="assets/top-langs.svg"
+          curl -fL --retry 5 --retry-delay 5 "$url" -o "${out}.tmp" || true
+          if [ -s "${out}.tmp" ]; then mv "${out}.tmp" "$out"; fi
+
+      - name: Fetch trophies
+        shell: bash
+        run: |
+          set -e
+          url="https://github-profile-trophy.vercel.app/?username=${GH_USER}&theme=onedark&margin-w=10&margin-h=10&row=1"
+          out="assets/trophies.svg"
+          curl -fL --retry 5 --retry-delay 5 "$url" -o "${out}.tmp" || true
+          if [ -s "${out}.tmp" ]; then mv "${out}.tmp" "$out"; fi
+
+      - name: Create placeholders if missing
+        shell: bash
+        run: |
+          set -e
+          make_placeholder () {
+            f="$1"
+            printf '%s\n' \
+              '<svg xmlns="http://www.w3.org/2000/svg" width="900" height="220">' \
+              '<rect width="100%" height="100%" fill="#0d1117"/>' \
+              '<text x="50%" y="50%" fill="#58a6ff" font-size="18" font-family="Arial" dominant-baseline="middle" text-anchor="middle">Temporarily unavailable - cached placeholder</text>' \
+              '</svg>' > "$f"
           }
-
-          # Stats
-          fetch "https://github-readme-stats.vercel.app/api?username=${GH_USER}&show_icons=true&include_all_commits=true&count_private=true&cache_seconds=21600&theme=tokyonight" assets/github-stats.svg
-
-          # Streak (use new stable domain)
-          fetch "https://streak-stats.demolab.com?user=${GH_USER}&theme=tokyonight" assets/github-streak.svg
-
-          # Top languages
-          fetch "https://github-readme-stats.vercel.app/api/top-langs/?username=${GH_USER}&layout=compact&langs_count=10&cache_seconds=21600&theme=tokyonight" assets/top-langs.svg
-
-          # Trophies
-          fetch "https://github-profile-trophy.vercel.app/?username=${GH_USER}&theme=onedark&margin-w=10&margin-h=10&row=1" assets/trophies.svg
-
-          # Ensure placeholders if missing
-          for f in trophies.svg github-stats.svg github-streak.svg top-langs.svg; do
-            if [ ! -s "assets/$f" ]; then
-              cat > "assets/$f" <<'SVG'
-<svg xmlns="http://www.w3.org/2000/svg" width="900" height="220">
-  <rect width="100%" height="100%" fill="#0d1117"/>
-  <text x="50%" y="50%" fill="#58a6ff" font-size="18"
-        font-family="Inter,Segoe UI,Arial" dominant-baseline="middle" text-anchor="middle">
-    Temporarily unavailable — cached placeholder
-  </text>
-</svg>
-SVG
-            fi
+          for f in assets/trophies.svg assets/github-stats.svg assets/github-streak.svg assets/top-langs.svg; do
+            [ -s "$f" ] || make_placeholder "$f"
           done
 
       - name: Commit refreshed assets
+        shell: bash
         run: |
           if [ -n "$(git status --porcelain assets)" ]; then
             git config user.name "github-actions[bot]"
